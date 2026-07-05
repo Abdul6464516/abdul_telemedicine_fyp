@@ -42,6 +42,17 @@ export async function getMyFeedbacks() {
   }
 }
 
+// Fetch active booked slots for a doctor so the UI can validate availability
+export async function getDoctorBookedSlots(doctorId) {
+  try {
+    const res = await api.get(`/patient/doctor/${doctorId}/appointments`);
+    return res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err.message || 'Failed to fetch doctor appointments';
+    throw new Error(msg);
+  }
+}
+
 // Book an appointment with a doctor
 export async function bookAppointment({ doctor, date, time, type, reason, notes }) {
   try {

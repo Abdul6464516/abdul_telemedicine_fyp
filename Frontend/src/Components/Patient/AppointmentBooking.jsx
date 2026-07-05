@@ -5,9 +5,47 @@ import {
   CheckCircle, Heart,
 } from "lucide-react";
 import { fetchDoctors, fetchDoctorRatings } from "../../services/doctorAction";
-import { bookAppointment } from "../../services/patientAction";
+import { bookAppointment, getDoctorBookedSlots } from "../../services/patientAction";
 import { toast } from "react-toastify";
 import "./AppointmentBooking.css";
+
+const APPOINTMENT_BUFFER_MINUTES = 60;
+
+const parseTimeToMinutes = (value) => {
+  if (!value) return null;
+
+  const trimmed = String(value).trim().toUpperCase();
+  const amPmMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+  if (amPmMatch) {
+    let hours = Number(amPmMatch[1]);
+    const minutes = Number(amPmMatch[2]);
+    const period = amPmMatch[3];
+
+    if (period === "AM") {
+      hours = hours === 12 ? 0 : hours;
+    } else {
+      hours = hours === 12 ? 12 : hours + 12;
+    }
+
+    return hours * 60 + minutes;
+  }
+
+  const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+  if (twentyFourHourMatch) {
+    return Number(twentyFourHourMatch[1]) * 60 + Number(twentyFourHourMatch[2]);
+  }
+
+  return null;
+};
+
+const hasTimeBufferConflict = (existingTime, requestedTime) => {
+  const existingMinutes = parseTimeToMinutes(existingTime);
+  const requestedMinutes = parseTimeToMinutes(requestedTime);
+
+  if (existingMinutes === null || requestedMinutes === null) return false;
+
+  return Math.abs(existingMinutes - requestedMinutes) < APPOINTMENT_BUFFER_MINUTES;
+};
 
 const AppointmentBooking = () => {
   const [doctors, setDoctors] = useState([]);
@@ -23,6 +61,8 @@ const AppointmentBooking = () => {
   const [booking, setBooking] = useState({ date: "", time: "", type: "online", reason: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [doctorBookedSlots, setDoctorBookedSlots] = useState([]);
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
 
   const loadDoctors = useCallback(async () => {
     setLoading(true);
@@ -60,16 +100,44 @@ const AppointmentBooking = () => {
     setSelectedDoctor(doctor);
     setBooking({ date: "", time: "", type: "online", reason: "", notes: "" });
     setBookingSuccess(false);
+    setDoctorBookedSlots([]);
     setShowModal(true);
   };
 
-  const closeModal = () => { setShowModal(false); setSelectedDoctor(null); setBookingSuccess(false); };
+  const closeModal = () => { setShowModal(false); setSelectedDoctor(null); setBookingSuccess(false); setDoctorBookedSlots([]); };
 
   const handleBookingChange = (e) => setBooking({ ...booking, [e.target.name]: e.target.value });
+
+  useEffect(() => {
+    const loadBookedSlots = async () => {
+      if (!showModal || !selectedDoctor?._id) return;
+
+      setLoadingAvailability(true);
+      try {
+        const data = await getDoctorBookedSlots(selectedDoctor._id);
+        setDoctorBookedSlots(data.appointments || []);
+      } catch (err) {
+        toast.error(err.message);
+        setDoctorBookedSlots([]);
+      } finally {
+        setLoadingAvailability(false);
+      }
+    };
+
+    loadBookedSlots();
+  }, [showModal, selectedDoctor]);
+
+  const slotConflict = booking.date && booking.time && doctorBookedSlots.some((appointment) => {
+    return appointment.date === booking.date && hasTimeBufferConflict(appointment.time, booking.time);
+  });
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     if (!booking.date || !booking.time) { toast.error("Please select date and time"); return; }
+    if (slotConflict) {
+      toast.error("This doctor already has an appointment within 1 hour of the selected time.");
+      return;
+    }
     setSubmitting(true);
     try {
       await bookAppointment({
@@ -263,6 +331,19 @@ const AppointmentBooking = () => {
 
                 <div className="ab-modal-divider" />
 
+                {loadingAvailability && (
+                  <div className="ab-availability-loading">
+                    <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+                    Checking doctor schedule...
+                  </div>
+                )}
+
+                {slotConflict && !loadingAvailability && (
+                  <div className="ab-slot-conflict" role="alert">
+                    This doctor already has an appointment within 1 hour of the selected time. Please choose another slot.
+                  </div>
+                )}
+
                 {/* Form */}
                 <form onSubmit={handleBookingSubmit}>
                   <div className="ab-form-grid">
@@ -328,9 +409,11 @@ const AppointmentBooking = () => {
                     />
                   </div>
 
-                  <button type="submit" className="ab-submit-btn" disabled={submitting}>
+                  <button type="submit" className="ab-submit-btn" disabled={submitting || loadingAvailability || slotConflict}>
                     {submitting ? (
                       <><Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} /> Booking...</>
+                    ) : loadingAvailability ? (
+                      <><Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} /> Checking availability...</>
                     ) : (
                       <><CheckCircle size={18} /> Confirm Booking</>
                     )}
