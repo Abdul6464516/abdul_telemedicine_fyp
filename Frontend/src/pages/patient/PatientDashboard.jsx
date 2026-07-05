@@ -87,7 +87,7 @@ const PatientDashboard = () => {
 
         {/* Nav */}
         <nav className="pd-nav">
-          <div className="pd-nav-label">MENU</div>
+          {/* <div className="pd-nav-label">MENU</div> */}
           {menuItems.map((item) => {
             const active = activeTab === item.id;
             return (

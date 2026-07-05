@@ -1,25 +1,53 @@
-/* Legacy Vite starter styles removed */
+:root {
+  color-scheme: light;
+  --app-bg: #f4f8f5;
+  --app-bg-strong: #eaf2ec;
+  --app-surface: #ffffff;
+  --app-surface-soft: rgba(255, 255, 255, 0.82);
+  --app-text: #0f172a;
+  --app-muted: #5b6578;
+  --app-border: rgba(15, 23, 42, 0.08);
+  --app-brand: #146c43;
+  --app-brand-strong: #0f5132;
+  --app-teal: #0f766e;
+  --app-gold: #b45309;
+  --app-rose: #be185d;
+  --app-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+}
 
-/* Global resets */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
-/* Home page floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--app-text);
+  background:
+    radial-gradient(circle at top left, rgba(20, 108, 67, 0.08), transparent 24%),
+    radial-gradient(circle at top right, rgba(15, 118, 110, 0.08), transparent 22%),
+    linear-gradient(180deg, #f8fbf9 0%, var(--app-bg) 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
