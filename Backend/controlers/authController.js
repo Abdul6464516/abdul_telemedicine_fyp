@@ -10,6 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
 async function register(req, res) {
   try {
     const { fullName, email, username, password, role, city,
+      
       // Patient fields
       age, gender, phone, medicalHistory,
       // Doctor fields
