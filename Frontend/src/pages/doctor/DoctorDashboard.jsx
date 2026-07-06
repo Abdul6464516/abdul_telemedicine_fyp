@@ -88,13 +88,13 @@ const DoctorDashboard = () => {
       {isMobile && sidebarOpen && <div className="doctor-dashboard-overlay" onClick={() => setSidebarOpen(false)} />}
 
       {/* ═══ SIDEBAR ═══ */}
-      <aside className={`doctor-dashboard-sidebar ${sidebarOpen ? "visible" : "hidden"}`} style={{ width: isMobile ? "260px" : "272px" }}>
+      <aside className={`doctor-dashboard-sidebar ${!sidebarOpen ? "closed" : ""}`}>
         <div className="doctor-dashboard-brand">
           <div className="doctor-dashboard-brand-icon"><Heart size={20} color="#fff" fill="#fff" /></div>
           <span className="doctor-dashboard-brand-name">Telemedicine</span>
         </div>
         <nav className="doctor-dashboard-nav">
-          <div className="doctor-dashboard-nav-label">MENU</div>
+          {/* <div className="doctor-dashboard-nav-label">MENU</div> */}
           {menuItems.map((item) => {
             const active = activeTab === item.id;
             return (
@@ -115,7 +115,7 @@ const DoctorDashboard = () => {
       </aside>
 
       {/* ═══ MAIN ═══ */}
-      <div className={`doctor-dashboard-main ${isMobile ? "no-sidebar" : ""} ${!sidebarOpen ? "collapsed" : ""}`}>
+      <div className={`doctor-dashboard-main ${isMobile && !sidebarOpen ? "sidebar-closed" : ""} ${!isMobile && !sidebarOpen ? "collapsed" : ""}`}>
         <header className="doctor-dashboard-header">
           <div className="doctor-dashboard-header-left">
             <button className="doctor-dashboard-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>

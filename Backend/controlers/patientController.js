@@ -4,6 +4,83 @@ const Appointment = require('../models/Appointment');
 const Prescription = require('../models/Prescription');
 const Notification = require('../models/Notification');
 
+const ACTIVE_APPOINTMENT_STATUSES = ['pending', 'approved'];
+const APPOINTMENT_BUFFER_MINUTES = 60;
+
+function parseAppointmentTime(value) {
+  if (!value) return null;
+
+  const trimmed = String(value).trim().toUpperCase();
+
+  const amPmMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+  if (amPmMatch) {
+    let hours = Number(amPmMatch[1]);
+    const minutes = Number(amPmMatch[2]);
+    const period = amPmMatch[3];
+
+    if (period === 'AM') {
+      hours = hours === 12 ? 0 : hours;
+    } else {
+      hours = hours === 12 ? 12 : hours + 12;
+    }
+
+    return hours * 60 + minutes;
+  }
+
+  const twentyFourHourMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+  if (twentyFourHourMatch) {
+    const hours = Number(twentyFourHourMatch[1]);
+    const minutes = Number(twentyFourHourMatch[2]);
+    return hours * 60 + minutes;
+  }
+
+  return null;
+}
+
+function normalizeAppointmentTime(value) {
+  const minutes = parseAppointmentTime(value);
+  if (minutes === null) return String(value).trim();
+
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+}
+
+function hasAppointmentOverlap(existingTime, requestedTime) {
+  const existingMinutes = parseAppointmentTime(existingTime);
+  const requestedMinutes = parseAppointmentTime(requestedTime);
+
+  if (existingMinutes === null || requestedMinutes === null) return false;
+
+  return Math.abs(existingMinutes - requestedMinutes) < APPOINTMENT_BUFFER_MINUTES;
+}
+
+// GET /api/patient/doctor/:doctorId/appointments — fetch a doctor's booked slots for validation
+async function getDoctorBookedSlots(req, res) {
+  try {
+    const { doctorId } = req.params;
+
+    if (!doctorId) {
+      return res.status(400).json({ message: 'Doctor is required' });
+    }
+
+    const doctorUser = await User.findOne({ _id: doctorId, role: 'doctor' }).select('_id fullName');
+    if (!doctorUser) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const appointments = await Appointment.find({
+      doctor: doctorId,
+      status: { $in: ACTIVE_APPOINTMENT_STATUSES },
+    }).select('date time status');
+
+    res.json({ doctor: doctorUser, appointments });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 // POST /api/patient/appointment — book an appointment
 async function bookAppointment(req, res) {
   try {
@@ -17,23 +94,35 @@ async function bookAppointment(req, res) {
     const doctorUser = await User.findOne({ _id: doctor, role: 'doctor' });
     if (!doctorUser) return res.status(404).json({ message: 'Doctor not found' });
 
-    // Prevent duplicate booking for same patient + doctor + date + time
-    const existing = await Appointment.findOne({
-      patient: req.user.id,
+    const normalizedDate = String(date).trim();
+    const normalizedTime = normalizeAppointmentTime(time);
+
+    if (parseAppointmentTime(normalizedTime) === null) {
+      return res.status(400).json({ message: 'Invalid appointment time' });
+    }
+
+    // Prevent any patient from booking within 1 hour of an existing appointment for the same doctor
+    const existingAppointments = await Appointment.find({
       doctor,
-      date,
-      time,
-      status: { $in: ['pending', 'approved'] },
-    });
-    if (existing) {
-      return res.status(409).json({ message: 'You already have a booking with this doctor at this slot' });
+      date: normalizedDate,
+      status: { $in: ACTIVE_APPOINTMENT_STATUSES },
+    }).select('patient time');
+
+    const conflictingAppointment = existingAppointments.find((appointment) =>
+      hasAppointmentOverlap(appointment.time, normalizedTime)
+    );
+
+    if (conflictingAppointment) {
+      return res.status(409).json({
+        message: 'This doctor already has an appointment within 1 hour of the selected time. Please choose another slot.',
+      });
     }
 
     const appointment = new Appointment({
       patient: req.user.id,
       doctor,
-      date,
-      time,
+      date: normalizedDate,
+      time: normalizedTime,
       type: type || 'online',
       reason: reason || '',
       notes: notes || '',
@@ -204,4 +293,4 @@ async function getMyPrescriptions(req, res) {
   }
 }
 
-module.exports = { getProfile, updateProfile, submitFeedback, getMyFeedbacks, bookAppointment, getMyAppointments, cancelAppointment, getMyPrescriptions };
+module.exports = { getProfile, updateProfile, submitFeedback, getMyFeedbacks, getDoctorBookedSlots, bookAppointment, getMyAppointments, cancelAppointment, getMyPrescriptions };

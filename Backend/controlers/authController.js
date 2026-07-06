@@ -16,6 +16,7 @@ async function register(req, res) {
       // Doctor fields
       specialty, qualifications, yearsOfExperience, availability, chargesPerSession
     } = req.body;
+    console.log("req body",req.body);
     if (!fullName || !email || !username || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
