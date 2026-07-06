@@ -1,0 +1,328 @@
+/* Smart Doctor Overview */
+
+.doctor-smart-overview {
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.1), transparent 26%),
+    linear-gradient(180deg, #e3ecf6 0%, #d9e4f0 100%);
+}
+
+.doctor-smart-overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.doctor-smart-overview-heading-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.doctor-smart-overview-badge-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #22c55e, #14b8a6);
+  box-shadow: 0 10px 24px rgba(20, 184, 166, 0.25);
+}
+
+.doctor-smart-overview-title {
+  margin: 0;
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.doctor-smart-overview-subtitle {
+  margin: 5px 0 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.doctor-smart-overview-refresh-btn {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  color: #0f172a;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.doctor-smart-overview-refresh-btn:hover {
+  background: #ffffff;
+  border-color: rgba(20, 184, 166, 0.35);
+}
+
+.doctor-smart-overview-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.doctor-smart-overview-metric-card {
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+}
+
+.doctor-smart-overview-metric-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.doctor-smart-overview-metric-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doctor-smart-overview-metric-title {
+  font-size: 12px;
+  color: #334155;
+  font-weight: 700;
+}
+
+.doctor-smart-overview-metric-value {
+  margin: 8px 0 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.tone-all .doctor-smart-overview-metric-icon {
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+.tone-pending .doctor-smart-overview-metric-icon {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.tone-approved .doctor-smart-overview-metric-icon {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.tone-rejected .doctor-smart-overview-metric-icon {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.tone-consultation .doctor-smart-overview-metric-icon {
+  color: #0f766e;
+  background: #ccfbf1;
+}
+
+.tone-patients .doctor-smart-overview-metric-icon {
+  color: #6d28d9;
+  background: #ede9fe;
+}
+
+.doctor-smart-overview-patients-panel {
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+  overflow: hidden;
+}
+
+.doctor-smart-overview-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.doctor-smart-overview-panel-head h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.doctor-smart-overview-panel-head span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.doctor-smart-overview-patient-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.doctor-smart-overview-patient-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  flex-wrap: wrap;
+}
+
+.doctor-smart-overview-patient-card:last-child {
+  border-bottom: none;
+}
+
+.doctor-smart-overview-patient-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.doctor-smart-overview-patient-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #22c55e, #0ea5e9);
+}
+
+.doctor-smart-overview-patient-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.doctor-smart-overview-patient-meta {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.doctor-smart-overview-patient-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.doctor-smart-overview-visit {
+  margin: 0;
+  font-size: 12px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.doctor-smart-overview-status-chip {
+  margin: 0;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.doctor-smart-overview-status-chip.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.doctor-smart-overview-status-chip.status-approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.doctor-smart-overview-status-chip.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.doctor-smart-overview-status-chip.status-completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.doctor-smart-overview-city {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.doctor-smart-overview-empty,
+.doctor-smart-overview-state {
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.doctor-smart-overview-error {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.doctor-smart-overview-spin {
+  animation: doctorSmartOverviewSpin 1s linear infinite;
+}
+
+@keyframes doctorSmartOverviewSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 920px) {
+  .doctor-smart-overview-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .doctor-smart-overview {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .doctor-smart-overview-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-smart-overview-patient-card {
+    padding: 12px;
+  }
+}

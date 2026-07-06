@@ -30,6 +30,7 @@ const {
   getPatientConsent,
   approveDeletion
 } = require('../controlers/adminController');
+const { getAdminOverviewInsights } = require('../controlers/adminInsightsController');
 const { verifyToken, requireRole } = require('../middleware/auth');
 
 // Get current admin profile (requires authentication and admin role)
@@ -40,6 +41,9 @@ router.put('/profile', verifyToken, requireRole('admin'), updateAdminProfile);
 
 // Get all admins (requires authentication and admin role)
 router.get('/all', verifyToken, requireRole('admin'), getAllAdmins);
+
+// Smart admin overview insights
+router.get('/overview-insights', verifyToken, requireRole('admin'), getAdminOverviewInsights);
 
 // Get single admin by ID (requires authentication and admin role)
 router.get('/:adminId', verifyToken, requireRole('admin'), getAdminById);

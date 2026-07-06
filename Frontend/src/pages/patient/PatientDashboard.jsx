@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   User, Calendar, Video, FileText, ClipboardList, Star,
-  Menu, X, Heart, ChevronRight, Bell,
+  Menu, X, Heart, ChevronRight, Bell,Stethoscope
 } from "lucide-react";
-import { toast } from "react-toastify";
 import { clearSession } from "../../services/auth";
 import { useUser } from "../../context/UserContext";
-import { connectSocket, disconnectSocket } from "../../services/socket";
+import { connectSocket } from "../../services/socket";
 
 import PatientProfile from "../../Components/Patient/PatientProfile";
+import PatientSmartOverview from "../../Components/Patient/PatientSmartOverview";
 import VideoCall from "../../Components/Patient/VideoCall";
 import AppointmentBooking from "../../Components/Patient/AppointmentBooking";
 import PrescriptionAccess from "../../Components/Patient/PerscriptionAccess";
@@ -21,11 +21,10 @@ import "./PatientDashboard.css";
 const PatientDashboard = () => {
   const navigate = useNavigate();
   const { user, logoutUser } = useUser();
-  const [activeTab, setActiveTab] = useState("Profile");
+  const [activeTab, setActiveTab] = useState("Overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [incomingCallData, setIncomingCallData] = useState(null);
-  const [hovered, setHovered] = useState(null);
 
   const userName = user?.fullName || localStorage.getItem("userName") || "Patient";
 
@@ -62,10 +61,11 @@ const PatientDashboard = () => {
   };
 
   const menuItems = [
-    { id: "Profile", icon: <User size={20} />, label: "My Profile" },
-    { id: "Appointments", icon: <Calendar size={20} />, label: "Book Appointment" },
-    { id: "Consultation", icon: <Video size={20} />, label: "Video Consultation" },
-    { id: "Prescriptions", icon: <FileText size={20} />, label: "Prescriptions" },
+  { id: "Overview", icon: <ClipboardList size={20} />, label: "Dashboard Overview" },
+{ id: "Profile", icon: <User size={20} />, label: "My Profile" },
+{ id: "Appointments", icon: <Calendar size={20} />, label: "Book Appointment" },
+{ id: "Consultation", icon: <Video size={20} />, label: "Video Consultation" },
+{ id: "Prescriptions", icon: <FileText size={20} />, label: "My Prescriptions" },
   ];
 
   const greetHour = new Date().getHours();
@@ -79,7 +79,7 @@ const PatientDashboard = () => {
       <aside className={`pd-sidebar ${!sidebarOpen ? 'closed' : ''}`}>
         {/* Brand */}
         <div className="pd-brand">
-          <div className="pd-brand-icon"><Heart size={20} color="#fff" fill="#fff" /></div>
+          <div className="pd-brand-icon"><Stethoscope size={20} color="#fff" /></div>
           <span className="pd-brand-name">Telemedicine</span>
         </div>
 
@@ -94,8 +94,6 @@ const PatientDashboard = () => {
               <button
                 key={item.id}
                 onClick={() => { setActiveTab(item.id); if (isMobile) setSidebarOpen(false); }}
-                onMouseEnter={() => setHovered(item.id)}
-                onMouseLeave={() => setHovered(null)}
                 className={`pd-nav-item ${active ? 'active' : ''}`}
               >
                 <div className="pd-nav-icon-text">
@@ -137,6 +135,7 @@ const PatientDashboard = () => {
         {/* Content */}
         <main className="pd-content">
           <div className="pd-content-card">
+            {activeTab === "Overview" && <PatientSmartOverview />}
             {activeTab === "Profile" && <PatientProfile />}
             {activeTab === "Appointments" && <AppointmentBooking />}
             {activeTab === "Consultation" && (

@@ -61,6 +61,17 @@ export async function getDoctorAppointments() {
   }
 }
 
+// Fetch smart dashboard insights for the logged-in doctor
+export async function getDoctorDashboardInsights() {
+  try {
+    const res = await api.get('/doctor/insights');
+    return res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err.message || 'Failed to fetch dashboard insights';
+    throw new Error(msg);
+  }
+}
+
 // Approve an appointment
 export async function approveAppointment(appointmentId, remarks = '') {
   try {

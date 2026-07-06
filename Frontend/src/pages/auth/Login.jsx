@@ -12,6 +12,7 @@ import {
   CheckCircle,
   ChevronLeft,
   Clock3,
+  Stethoscope,
   Eye,
   EyeOff,
   Heart,
@@ -20,7 +21,6 @@ import {
   Menu,
   MessageSquare,
   ShieldCheck,
-  Stethoscope,
   User,
   Users,
   Video,
@@ -149,7 +149,7 @@ const Login = () => {
           </button>
 
           <div className="auth-brand">
-            <div className="auth-brand-mark"><Heart size={18} fill="currentColor" /></div>
+            <div className="auth-brand-mark"><Stethoscope size={20} color="#fff" /></div>
             <div className="auth-brand-text">
               <strong>Telemedicine</strong>
               <span>Modern healthcare access</span>

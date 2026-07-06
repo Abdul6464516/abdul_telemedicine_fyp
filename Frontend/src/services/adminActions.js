@@ -33,6 +33,16 @@ export const getAllAdmins = async () => {
   }
 };
 
+export const getAdminOverviewInsights = async () => {
+  try {
+    const response = await api.get('/admin/overview-insights');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching admin overview insights:', error);
+    throw error.response?.data || { message: 'Failed to fetch admin overview insights' };
+  }
+};
+
 export const getAdminById = async (adminId) => {
   try {
     const response = await api.get(`/admin/${adminId}`);

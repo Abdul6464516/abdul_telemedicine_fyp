@@ -163,7 +163,7 @@ const Home = () => {
             aria-label="Go to top"
           >
             <span className="home-brand-mark">
-              <Heart size={18} fill="currentColor" />
+             <Stethoscope size={20} color="#fff" />
             </span>
             <span>
               <strong>Telemedicine</strong>
@@ -462,7 +462,7 @@ const Home = () => {
           <div>
             <div className="home-brand footer-brand">
               <span className="home-brand-mark">
-                <Heart size={18} fill="currentColor" />
+              <Stethoscope size={20} color="#fff" />
               </span>
               <span>
                 <strong>Telemedicine</strong>

@@ -17,6 +17,7 @@ import PrescriptionGeneration from "../../Components/Doctor/PrescriptionGenerati
 import MedicalReports from "../../Components/Doctor/MedicalReports";
 import NotificationCenter from "../../Components/Doctor/NotificationCenter";
 import DoctorSettings from "../../Components/Doctor/DoctorSettings";
+import DoctorSmartOverview from "../../Components/Doctor/DoctorSmartOverview";
 import ProfileDropdown from "../../Components/ProfileDropdown";
 
 const DoctorDashboard = () => {
@@ -24,7 +25,7 @@ const DoctorDashboard = () => {
   const { user, logoutUser } = useUser();
   const drName = user?.fullName || "Specialist";
 
-  const [activeTab, setActiveTab] = useState("Profile");
+  const [activeTab, setActiveTab] = useState("Overview");
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
@@ -72,11 +73,12 @@ const DoctorDashboard = () => {
   };
 
   const menuItems = [
-    { id: "Profile", icon: <UserCheck size={20} />, label: "Doctor Profile" },
-    { id: "Appointments", icon: <Calendar size={20} />, label: "Schedule" },
-    { id: "Patients", icon: <Users size={20} />, label: "Patient History" },
-    { id: "Consultation", icon: <Video size={20} />, label: "Video Consult" },
-    { id: "Prescription", icon: <FileText size={20} />, label: "Prescription" },
+{ id: "Overview", icon: <ClipboardList size={20} />, label: "Dashboard Overview" },
+{ id: "Profile", icon: <UserCheck size={20} />, label: "Doctor Profile" },
+{ id: "Appointments", icon: <Calendar size={20} />, label: "Appointment Schedule" },
+{ id: "Patients", icon: <Users size={20} />, label: "Patient Records" },
+{ id: "Consultation", icon: <Video size={20} />, label: "Video Consultation" },
+{ id: "Prescription", icon: <FileText size={20} />, label: "e-Prescriptions" },
 
   ];
 
@@ -90,7 +92,7 @@ const DoctorDashboard = () => {
       {/* ═══ SIDEBAR ═══ */}
       <aside className={`doctor-dashboard-sidebar ${!sidebarOpen ? "closed" : ""}`}>
         <div className="doctor-dashboard-brand">
-          <div className="doctor-dashboard-brand-icon"><Heart size={20} color="#fff" fill="#fff" /></div>
+          <div className="doctor-dashboard-brand-icon"><Stethoscope size={20} color="#fff" /></div>
           <span className="doctor-dashboard-brand-name">Telemedicine</span>
         </div>
         <nav className="doctor-dashboard-nav">
@@ -149,6 +151,7 @@ const DoctorDashboard = () => {
 
         <main className="doctor-dashboard-content-area">
           <div className="doctor-dashboard-content-card">
+            {activeTab === "Overview" && <DoctorSmartOverview />}
             {activeTab === "Profile" && <DoctorProfile />}
             {activeTab === "Appointments" && <AppointmentManagement />}
             {activeTab === "Patients" && <PatientHistory />}

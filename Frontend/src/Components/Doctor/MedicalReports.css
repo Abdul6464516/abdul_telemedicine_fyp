@@ -5,7 +5,13 @@
 /* CONTAINER */
 .medical-reports-container {
   width: 100%;
-  padding: 0;
+  padding: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.1), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.08), transparent 22%),
+    linear-gradient(180deg, #eaf1f8 0%, #e1eaf3 100%);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
 }
 
 /* HEADER SECTION */

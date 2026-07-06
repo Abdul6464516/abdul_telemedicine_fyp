@@ -6,6 +6,7 @@ const {
   getCompletedPatients, getPatientHistory, createPrescription, getDoctorPrescriptions, getPrescriptionById,
   getDoctorRatings,
 } = require('../controlers/doctorController');
+const { getDoctorDashboardInsights } = require('../controlers/doctorInsightsController');
 const { verifyToken, requireRole } = require('../middleware/auth');
 
 // Public route — any logged-in user can search doctors
@@ -15,6 +16,7 @@ router.get('/ratings', verifyToken, getDoctorRatings);
 // Doctor-only routes
 router.get('/profile', verifyToken, requireRole('doctor'), getDoctorProfile);
 router.put('/profile', verifyToken, requireRole('doctor'), updateDoctorProfile);
+router.get('/insights', verifyToken, requireRole('doctor'), getDoctorDashboardInsights);
 router.get('/appointments', verifyToken, requireRole('doctor'), getDoctorAppointments);
 router.put('/appointment/:id/approve', verifyToken, requireRole('doctor'), approveAppointment);
 router.put('/appointment/:id/cancel', verifyToken, requireRole('doctor'), cancelAppointmentByDoctor);

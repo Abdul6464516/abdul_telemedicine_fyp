@@ -7,10 +7,12 @@ import {
   Heart,
   Lock,
   Menu,
+  Sparkles,
   ShieldCheck,
   UserCog,
   Users,
   X,
+  Stethoscope,
 } from "lucide-react";
 import { clearSession } from "../../services/auth";
 import { useUser } from "../../context/UserContext";
@@ -20,13 +22,14 @@ import UserManagement from "../../Components/Admin/UserManagement";
 import SystemMonitoring from "../../Components/Admin/SystemMonitoring";
 import SecurityPrivacy from "../../Components/Admin/SecurityPrivacy";
 import ReportsAnalytics from "../../Components/Admin/ReportsAnalytics";
+import AdminSmartOverview from "../../Components/Admin/AdminSmartOverview";
 import ProfileDropdown from "../../Components/ProfileDropdown";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, logoutUser } = useUser();
-  const [activeTab, setActiveTab] = useState("Admin Profile");
+  const [activeTab, setActiveTab] = useState("Smart Overview");
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -51,11 +54,12 @@ const AdminDashboard = () => {
 
   const menuItems = useMemo(
     () => [
-      { id: "Admin Profile", icon: <UserCog size={18} />, label: "Admin Profile" },
-      { id: "User Management", icon: <Users size={18} />, label: "User Management" },
-      { id: "System Monitoring", icon: <Activity size={18} />, label: "System Activity" },
-      { id: "Security & Privacy", icon: <Lock size={18} />, label: "Security & Privacy" },
-      { id: "Reports & Analytics", icon: <BarChart3 size={18} />, label: "Reports & Analytics" },
+{ id: "Smart Overview", icon: <Sparkles size={18} />, label: "Command Center" },
+{ id: "Admin Profile", icon: <UserCog size={18} />, label: "Admin HQ" },
+{ id: "User Management", icon: <Users size={18} />, label: "Team Control" },
+{ id: "System Monitoring", icon: <Activity size={18} />, label: "Live Pulse" },
+{ id: "Security & Privacy", icon: <ShieldCheck size={18} />, label: "Vault & Shield" },
+{ id: "Reports & Analytics", icon: <BarChart3 size={18} />, label: "Insights Deck" },
     ],
     []
   );
@@ -71,7 +75,7 @@ const AdminDashboard = () => {
         <div className="admin-sidebar-top">
           <div className="admin-brand">
             <div className="admin-brand-mark">
-              <Heart size={18} fill="currentColor" />
+              <Stethoscope size={20} color="#fff" />
             </div>
             <div className="admin-brand-text">
               <strong>Telemedicine</strong>
@@ -145,6 +149,7 @@ const AdminDashboard = () => {
               <div className="admin-panel-title">{activeTab}</div>
             </div>
             <div className="admin-panel-card">
+              {activeTab === "Smart Overview" && <AdminSmartOverview />}
               {activeTab === "Admin Profile" && <AdminProfile />}
               {activeTab === "User Management" && <UserManagement />}
               {activeTab === "System Monitoring" && <SystemMonitoring />}
